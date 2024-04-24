@@ -3,6 +3,7 @@
 
   import * as pdfjs from 'pdfjs-dist'
   // As per https://vitejs.dev/guide/features#web-workers and https://github.com/mozilla/pdf.js/issues/8305
+  // and https://github.com/mozilla/pdf.js/pull/17504
   import pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs?worker&url'
   import { onDestroy, tick } from 'svelte'
   import { calcRT, getPageText, onPrint, savePDF } from './utils/Helper.svelte'
