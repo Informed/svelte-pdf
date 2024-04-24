@@ -2,7 +2,8 @@
   // @ts-nocheck
 
   import * as pdfjs from 'pdfjs-dist'
-  import * as pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs'
+  // As per https://vitejs.dev/guide/features#web-workers and https://github.com/mozilla/pdf.js/issues/8305
+  import pdfWorker from 'pdfjs-dist/build/pdf.worker.mjs?worker&url'
   import { onDestroy, tick } from 'svelte'
   import { calcRT, getPageText, onPrint, savePDF } from './utils/Helper.svelte'
   import Tooltip from './utils/Tooltip.svelte'
@@ -75,7 +76,7 @@
           if (pageNum < pdfDoc.totalPage) {
             pages[pageNum] = canvas
             pageNum++
-            pdfDoc.getPage(pageNum).then(renderPage)
+                             pdfDoc.getPage(pageNum).then(renderPage)
           } else {
             for (let i = 1; i < pages.length; i++) {
               canvas.appendChild(pages[i])
@@ -167,29 +168,29 @@
       ...(password && { password }),
     })
     loadingTask.promise
-      .then(async function (pdfDoc_) {
-        pdfDoc = pdfDoc_
-        passwordError = false
-        await tick()
+                           .then(async function (pdfDoc_) {
+                             pdfDoc = pdfDoc_
+                             passwordError = false
+                             await tick()
 
-        showButtons.length ? (pageCount.textContent = pdfDoc.numPages) : null
-        totalPage = pdfDoc.numPages
-        if (showButtons.length) {
-          for (let number = 1; number <= totalPage; number++) {
-            // Extract the text
-            getPageText(number, pdfDoc).then(function (textPage) {
-              // Show the text of the page in the console
-              pdfContent = pdfContent.concat(textPage)
-              readingTime = calcRT(pdfContent)
-            })
-          }
-        }
-        isInitialized = true
-      })
-      .catch(function (error) {
-        passwordError = true
-        passwordMessage = error.message
-      })
+                             showButtons.length ? (pageCount.textContent = pdfDoc.numPages) : null
+                             totalPage = pdfDoc.numPages
+                             if (showButtons.length) {
+                               for (let number = 1; number <= totalPage; number++) {
+                                 // Extract the text
+                                 getPageText(number, pdfDoc).then(function (textPage) {
+                                   // Show the text of the page in the console
+                                   pdfContent = pdfContent.concat(textPage)
+                                   readingTime = calcRT(pdfContent)
+                                 })
+                               }
+                             }
+                             isInitialized = true
+                           })
+                           .catch(function (error) {
+                             passwordError = true
+                             passwordMessage = error.message
+                           })
   }
   initialLoad()
   $: if (isInitialized) queueRenderPage(pageNum)
