@@ -122,6 +122,14 @@ Since out `PdfViewer` component has a dependency on `window` object, we have to 
 <svelte:component this={PdfViewer} url="YOUR-PDF-URL"/>
 ```
 
+## Build and Package
+
+``` bash
+npm install
+npm run build
+npm run package
+```
+
 ## Contributing
 
 Feel free to open an issue (or even better, send a Pull Request). Contributions are very welcome!! 😄
